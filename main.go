@@ -35,19 +35,26 @@ func main() {
 			`href`)
 	}
 
+	selectors := make(map[string]string)
+	selectors[`title`] = `span#title`
 	nodesValue := nodes_instance.(IGetter).Getter()[1]
-	fmt.Println(nodesValue.([]string))
+	for _, i := range nodesValue.([]string) {
+		threads <- struct{}{}
+		elements_instance := NewElements()
+		ctx, cancel := InitDriver()
+		go elements_instance.Execute(
+			`https://dataverse.harvard.edu`+i,
+			selectors,
+			ctx,
+			cancel,
+		)
 
-	fmt.Println("Finished")
-	// sitemap_instance := NewSitemap()
-	// sitemap_instance.Execute()
+		elements := elements_instance.(IGetter).Getter()[0]
 
-	// nodesValue := nodes_instance.(IGetter).Getter()[1]
-	// for _, i := range nodesValue.([]string) {
-	// 	threads <- struct{}{}
-	// 	elements_instance := NewElements()
-	// 	go elements_instance.Execute(i)
-	// }
+		for k, v := range elements.(map[string]string) {
+			fmt.Println(k, ":", v)
+		}
+	}
 
 	for {
 		if len(threads) == 0 {
