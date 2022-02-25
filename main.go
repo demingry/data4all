@@ -27,7 +27,6 @@ func main() {
 	sourceNodes := make(map[string]interface{})
 	for i := start; i < end; i++ {
 		threads <- struct{}{}
-		fmt.Println(i)
 		ctx, cancel := InitDriver()
 		nodes_instance := NewNodes()
 		go nodes_instance.Execute(
@@ -46,8 +45,30 @@ func main() {
 		}
 	}
 
-	fmt.Println(sourceNodes["NodesValue"])
-	fmt.Println(`finished`)
+	sourceElements := make(map[string]string)
+	selectors := make(map[string]string)
+	selectors[`title`] = `span#title`
+	for _, i := range sourceNodes["NodesValue"].([]string) {
+		threads <- struct{}{}
+		elements_instance := NewElements()
+		ctx, cancel := InitDriver()
+		fmt.Println(i)
+		go elements_instance.Execute(
+			`https://dataverse.harvard.edu`+i,
+			selectors,
+			ctx,
+			cancel,
+			&sourceElements,
+		)
+	}
+
+	for {
+		if len(threads) == 0 {
+			break
+		}
+	}
+
+	fmt.Println(sourceElements)
 
 	// selectors := make(map[string]string)
 	// selectors[`title`] = `span#title`
