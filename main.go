@@ -1,12 +1,7 @@
 package main
 
 import (
-	"context"
-	"fmt"
 	"sync"
-
-	"github.com/chromedp/cdproto/dom"
-	"github.com/chromedp/chromedp"
 )
 
 var (
@@ -15,35 +10,6 @@ var (
 	mu       sync.Mutex
 	transfer chan interface{}
 )
-
-func sourceFromDriver(url string) {
-
-	ctx, cancel := InitDriver()
-	defer cancel()
-
-	var res string
-	err := chromedp.Run(*ctx,
-		chromedp.Navigate(url),
-		chromedp.ActionFunc(func(ctx context.Context) error {
-			node, err := dom.GetDocument().Do(ctx)
-			if err != nil {
-				return err
-			}
-			res, err = dom.GetOuterHTML().WithNodeID(node.NodeID).Do(ctx)
-			return err
-		}),
-	)
-
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-
-	fmt.Println(string(res))
-
-	<-threads
-
-}
 
 func main() {
 
@@ -115,10 +81,18 @@ func main() {
 		`https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/NKCQM1`,
 	}
 	threads := make(chan struct{}, 3)
+
+	var sourcePage []string
 	for _, v := range href {
 		threads <- struct{}{}
-		fmt.Println(v)
-		sourceFromDriver(v)
+		page_instance := NewPage(`PageFromDriver`)
+		ctx, cancel := InitDriver()
+		go page_instance.Execute(
+			v,
+			ctx,
+			cancel,
+			&sourcePage,
+		)
 	}
 
 	for {

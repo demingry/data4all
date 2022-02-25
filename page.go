@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/chromedp/cdproto/dom"
 	"github.com/chromedp/chromedp"
 )
 
@@ -38,7 +37,8 @@ func (pd *PageFromDriver) Execute(params ...interface{}) (interface{}, error) {
 		return nil, fmt.Errorf("Wrong type in params")
 	}
 
-	pd.sourceFromDriver(fmt.Sprintf("%v", params[0]), ctx, cancel)
+	pageSource := pd.sourceFromDriver(fmt.Sprintf("%v", params[0]), ctx, cancel)
+	fmt.Println(pageSource)
 	return nil, nil
 }
 
@@ -98,14 +98,8 @@ func (pd *PageFromDriver) sourceFromDriver(url string,
 	var res string
 	err := chromedp.Run(*ctx,
 		chromedp.Navigate(url),
-		chromedp.ActionFunc(func(ctx context.Context) error {
-			node, err := dom.GetDocument().Do(ctx)
-			if err != nil {
-				return err
-			}
-			res, err = dom.GetOuterHTML().WithNodeID(node.NodeID).Do(ctx)
-			return err
-		}),
+		chromedp.WaitReady("body"),
+		chromedp.OuterHTML("html", &res, chromedp.ByQuery),
 	)
 
 	if err != nil {
