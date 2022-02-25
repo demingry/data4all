@@ -117,6 +117,7 @@ func main() {
 	threads := make(chan struct{}, 3)
 	for _, v := range href {
 		threads <- struct{}{}
+		fmt.Println(v)
 		sourceFromDriver(v)
 	}
 
