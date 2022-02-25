@@ -95,12 +95,12 @@ func (e *Elemtns) checkRes(res map[string]string) {
 
 func (e *Elemtns) Getter(source interface{}) {
 
-	sourceConver, ok := source.(map[string]string)
+	sourceConver, ok := source.(*map[string]string)
 	if !ok {
 		return
 	}
 
 	for k, v := range e.elements {
-		sourceConver[k] = v
+		(*sourceConver)[k] = v
 	}
 }
