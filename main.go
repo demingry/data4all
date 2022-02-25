@@ -85,6 +85,7 @@ func main() {
 		}
 	}
 
-	fmt.Println(sourcePage[1])
+	fmt.Println(len(sourcePage))
+	fmt.Println(sourcePage)
 
 }
