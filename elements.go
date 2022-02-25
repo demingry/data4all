@@ -28,6 +28,10 @@ func (e *Elemtns) Execute(params ...interface{}) (interface{}, error) {
 		return nil, fmt.Errorf("Wrong type in params")
 	}
 	elements := e.findElements(fmt.Sprintf("%v", params[0]), selectors, ctx, cancel)
+	e.elements = make(map[string]string)
+	for k, v := range elements {
+		e.elements[k] = v
+	}
 	return elements, nil
 }
 
@@ -97,7 +101,6 @@ func (e *Elemtns) Getter(source interface{}) {
 
 	sourceConver, ok := source.(*map[string]string)
 	if !ok {
-		fmt.Println("this1")
 		return
 	}
 
