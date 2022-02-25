@@ -31,7 +31,7 @@ func (n *Nodes) Execute(params ...interface{}) (interface{}, error) {
 		return nil, fmt.Errorf("Wrong type in params")
 	}
 
-	if len(params) == 4 {
+	if len(params) == 5 {
 
 		nodes := n.findNodes(fmt.Sprintf("%v", params[0]), fmt.Sprintf("%v", params[1]), ctx, cancel)
 		if nodes == nil {
@@ -41,7 +41,7 @@ func (n *Nodes) Execute(params ...interface{}) (interface{}, error) {
 		copy(n.Nodes, nodes)
 		return nodes, nil
 
-	} else if len(params) == 5 {
+	} else if len(params) == 6 {
 
 		nodes := n.findNodes(fmt.Sprintf("%v", params[0]), fmt.Sprintf("%v", params[1]), ctx, cancel)
 		if nodes == nil {
