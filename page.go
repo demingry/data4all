@@ -38,7 +38,7 @@ func (pd *PageFromDriver) Execute(params ...interface{}) (interface{}, error) {
 	}
 
 	pageSource := pd.sourceFromDriver(fmt.Sprintf("%v", params[0]), ctx, cancel)
-	fmt.Println(pageSource)
+	fmt.Println(`this`)
 	return nil, nil
 }
 
