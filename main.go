@@ -79,6 +79,10 @@ func main() {
 		`https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/UM5S3X`,
 		`https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/UA8AGD`,
 		`https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/NKCQM1`,
+		`https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/17XS9I`,
+		`https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/UM5S3X`,
+		`https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/UA8AGD`,
+		`https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/NKCQM1`,
 	}
 	threads := make(chan struct{}, 3)
 
