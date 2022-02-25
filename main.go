@@ -48,6 +48,7 @@ func main() {
 	var sourceElements []interface{}
 	selectors := make(map[string]string)
 	selectors[`title`] = `span#title`
+	selectors[`description`] = `#dsDescription div`
 	for _, i := range sourceNodes["NodesValue"].([]string) {
 		threads <- struct{}{}
 		elements_instance := NewElements()
