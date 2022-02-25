@@ -85,6 +85,7 @@ func (n *Nodes) findNodes(url string,
 		url = fmt.Sprintf("%v", newurl)
 	}
 
+	fmt.Println(url)
 	if err := chromedp.Run(*ctx,
 		chromedp.Navigate(url),
 		chromedp.Nodes(selector, &nodes),
