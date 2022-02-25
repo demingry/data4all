@@ -37,7 +37,7 @@ func (pd *PageFromDriver) Execute(params ...interface{}) (interface{}, error) {
 		return nil, fmt.Errorf("Wrong type in params")
 	}
 
-	pageSource := pd.sourceFromDriver(fmt.Sprintf("%v", params[0]), ctx, cancel)
+	pd.sourceFromDriver(fmt.Sprintf("%v", params[0]), ctx, cancel)
 	fmt.Println(`this`)
 	return nil, nil
 }
