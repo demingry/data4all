@@ -45,36 +45,11 @@ func main() {
 		}
 	}
 
-	var sourceElements []interface{}
-	selectors := make(map[string]string)
-	selectors[`title`] = `span#title`
-	selectors[`description`] = `#dsDescription div`
-	for _, i := range sourceNodes["NodesValue"].([]string) {
-		threads <- struct{}{}
-		elements_instance := NewElements()
-		ctx, cancel := InitDriver()
-		fmt.Println(i)
-		go elements_instance.Execute(
-			`https://dataverse.harvard.edu`+i,
-			selectors,
-			ctx,
-			cancel,
-			&sourceElements,
-		)
-	}
-
-	for {
-		if len(threads) == 0 {
-			break
-		}
-	}
-
-	fmt.Println(sourceElements[3])
-
+	// var sourceElements []interface{}
 	// selectors := make(map[string]string)
 	// selectors[`title`] = `span#title`
-	// nodesValue := nodes_instance.(IGetter).Getter()[1]
-	// for _, i := range nodesValue.([]string) {
+	// selectors[`description`] = `#dsDescription div`
+	// for _, i := range sourceNodes["NodesValue"].([]string) {
 	// 	threads <- struct{}{}
 	// 	elements_instance := NewElements()
 	// 	ctx, cancel := InitDriver()
@@ -83,13 +58,30 @@ func main() {
 	// 		selectors,
 	// 		ctx,
 	// 		cancel,
+	// 		&sourceElements,
 	// 	)
 	// }
 
-	// for {
-	// 	if len(threads) == 0 {
-	// 		break
-	// 	}
-	// }
+	var sourcePage []string
+	for _, i := range sourceNodes["NodesValue"].([]string) {
+		threads <- struct{}{}
+		page_instance := NewPage(`PageFromDriver`)
+		ctx, cancel := InitDriver()
+		go page_instance.Execute(
+			`https://dataverse.harvard.edu`+i,
+			ctx,
+			cancel,
+			&sourcePage,
+		)
+
+	}
+
+	for {
+		if len(threads) == 0 {
+			break
+		}
+	}
+
+	fmt.Println(len(sourcePage))
 
 }

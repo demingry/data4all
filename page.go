@@ -20,11 +20,12 @@ type PageFromRaw struct {
 }
 
 /*
-	params[0]url, params[1]context.Context, params[2]context.CancelFunc
+	params[0]url, params[1]context.Context, params[2]context.CancelFunc, params[3]source(return)
 */
 func (pd *PageFromDriver) Execute(params ...interface{}) (interface{}, error) {
 
 	defer Finished()
+	defer pd.Getter(params[3])
 	if len(params) < 3 {
 		return nil, fmt.Errorf("Not enough params")
 	}
@@ -39,11 +40,12 @@ func (pd *PageFromDriver) Execute(params ...interface{}) (interface{}, error) {
 }
 
 /*
-	params[0]url
+	params[0]url, params[1]source(return)
 */
 func (pr *PageFromRaw) Execute(params ...interface{}) (interface{}, error) {
 
 	defer Finished()
+	defer pr.Getter(params[1])
 	pr.sourceFromRaw(fmt.Sprintf("%v", params[0]))
 	return nil, nil
 }
@@ -121,16 +123,29 @@ func NewPage(pagetype string) Icommand {
 	return &PageFromRaw{}
 }
 
-func (pd *PageFromDriver) Getter() []interface{} {
+/*
+	[]string
+*/
+func (pd *PageFromDriver) Getter(source interface{}) {
 
-	var data []interface{}
-	data = append(data, pd.pagesource)
-	return data
+	sourceConver, ok := source.(*[]string)
+	if !ok {
+		return
+	}
+
+	*sourceConver = append(*sourceConver, pd.pagesource)
+
 }
 
-func (pr *PageFromRaw) Getter() []interface{} {
+/*
+	[]string
+*/
+func (pr *PageFromRaw) Getter(source interface{}) {
 
-	var data []interface{}
-	data = append(data, pr.pagesource)
-	return data
+	sourceConver, ok := source.(*[]string)
+	if !ok {
+		return
+	}
+
+	*sourceConver = append(*sourceConver, pr.pagesource)
 }
