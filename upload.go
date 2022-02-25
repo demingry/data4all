@@ -1,4 +1,4 @@
-package data4all
+package main
 
 import (
 	"database/sql"
