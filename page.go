@@ -24,7 +24,7 @@ type PageFromRaw struct {
 */
 func (pd *PageFromDriver) Execute(params ...interface{}) (interface{}, error) {
 
-	// defer Finished()
+	defer Finished()
 	defer pd.Getter(params[3])
 	if len(params) < 4 {
 		return nil, fmt.Errorf("Not enough params")
@@ -95,7 +95,6 @@ func (pd *PageFromDriver) sourceFromDriver(url string,
 		url = fmt.Sprintf("%v", newurl)
 	}
 
-	fmt.Println(url)
 	var res string
 	err := chromedp.Run(*ctx,
 		chromedp.Navigate(url),
@@ -114,7 +113,6 @@ func (pd *PageFromDriver) sourceFromDriver(url string,
 		return ""
 	}
 
-	fmt.Println("pagesource: ", res)
 	return res
 
 }

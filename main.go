@@ -1,8 +1,14 @@
 package main
 
 import (
+	"context"
 	"fmt"
+	"os"
 	"sync"
+	"time"
+
+	"github.com/chromedp/cdproto/dom"
+	"github.com/chromedp/chromedp"
 )
 
 var (
@@ -11,6 +17,57 @@ var (
 	mu       sync.Mutex
 	transfer chan interface{}
 )
+
+func InitDriver() (*context.Context, context.CancelFunc) {
+
+	opt := []func(allocator *chromedp.ExecAllocator){
+		chromedp.ExecPath(os.Getenv("GOOGLE_CHROME_SHIM")),
+		chromedp.Flag("headless", true),
+		chromedp.Flag("disable-dev-shm-usage", true),
+		chromedp.Flag("diable-extensions", true),
+		chromedp.Flag("disable-gpu", true),
+		chromedp.Flag("--no-sandbox", true),
+	}
+
+	allocatorCtx, _ := chromedp.NewExecAllocator(
+		context.Background(),
+		append(opt, chromedp.DefaultExecAllocatorOptions[:]...)[:]...,
+	)
+
+	ctx, cancel := chromedp.NewContext(allocatorCtx)
+	ctx, cancel = context.WithTimeout(ctx, 25*time.Second)
+
+	return &ctx, cancel
+}
+
+func sourceFromDriver(url string) {
+
+	ctx, cancel := InitDriver()
+	defer cancel()
+
+	var res string
+	err := chromedp.Run(*ctx,
+		chromedp.Navigate(url),
+		chromedp.ActionFunc(func(ctx context.Context) error {
+			node, err := dom.GetDocument().Do(ctx)
+			if err != nil {
+				return err
+			}
+			res, err = dom.GetOuterHTML().WithNodeID(node.NodeID).Do(ctx)
+			return err
+		}),
+	)
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Println(string(res))
+
+	<-threads
+
+}
 
 func main() {
 
@@ -75,21 +132,22 @@ func main() {
 
 	// }
 
-	var sourcePage []string
-	page_instance := NewPage(`PageFromDriver`)
-	ctx, cancel := InitDriver()
-	page_instance.Execute(
+	href := []string{
+		`https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/17XS9I`,
+		`https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/UM5S3X`,
+		`https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/UA8AGD`,
 		`https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/NKCQM1`,
-		ctx,
-		cancel,
-		&sourcePage,
-	)
-	// for {
-	// 	if len(threads) == 0 {
-	// 		break
-	// 	}
-	// }
+	}
+	threads := make(chan struct{}, 3)
+	for _, v := range href {
+		threads <- struct{}{}
+		sourceFromDriver(v)
+	}
 
-	fmt.Println(sourcePage)
+	for {
+		if len(threads) == 0 {
+			break
+		}
+	}
 
 }
