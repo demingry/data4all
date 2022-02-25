@@ -106,7 +106,7 @@ func (pd *PageFromDriver) sourceFromDriver(url string,
 	)
 
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("Error in get page source: "err)
 		return ""
 	}
 
