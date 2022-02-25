@@ -79,35 +79,12 @@ func main() {
 
 	}
 
-	// href := []string{
-	// 	`https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/17XS9I`,
-	// 	`https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/UM5S3X`,
-	// 	`https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/UA8AGD`,
-	// 	`https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/NKCQM1`,
-	// 	`https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/17XS9I`,
-	// 	`https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/UM5S3X`,
-	// 	`https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/UA8AGD`,
-	// 	`https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/NKCQM1`,
-	// }
-	// threads := make(chan struct{}, 3)
-
-	// var sourcePage []string
-	// for _, v := range href {
-	// 	threads <- struct{}{}
-	// 	page_instance := NewPage(`PageFromDriver`)
-	// 	ctx, cancel := InitDriver()
-	// 	go page_instance.Execute(
-	// 		v,
-	// 		ctx,
-	// 		cancel,
-	// 		&sourcePage,
-	// 	)
-	// }
-
 	for {
 		if len(threads) == 0 {
 			break
 		}
 	}
+
+	fmt.Println(sourcePage[1])
 
 }
