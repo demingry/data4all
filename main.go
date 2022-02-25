@@ -41,32 +41,27 @@ func main() {
 		}
 	}
 
-	selectors := make(map[string]string)
-	selectors[`title`] = `span#title`
 	nodesValue := nodes_instance.(IGetter).Getter()[1]
-	for _, i := range nodesValue.([]string) {
-		threads <- struct{}{}
-		fmt.Println(i)
-		elements_instance := NewElements()
-		ctx, cancel := InitDriver()
-		go elements_instance.Execute(
-			`https://dataverse.harvard.edu`+i,
-			selectors,
-			ctx,
-			cancel,
-		)
+	fmt.Println(nodesValue.([]string))
+	// selectors := make(map[string]string)
+	// selectors[`title`] = `span#title`
+	// nodesValue := nodes_instance.(IGetter).Getter()[1]
+	// for _, i := range nodesValue.([]string) {
+	// 	threads <- struct{}{}
+	// 	elements_instance := NewElements()
+	// 	ctx, cancel := InitDriver()
+	// 	go elements_instance.Execute(
+	// 		`https://dataverse.harvard.edu`+i,
+	// 		selectors,
+	// 		ctx,
+	// 		cancel,
+	// 	)
+	// }
 
-		elements := elements_instance.(IGetter).Getter()[0]
-
-		for k, v := range elements.(map[string]string) {
-			fmt.Println(k, ":", v)
-		}
-	}
-
-	for {
-		if len(threads) == 0 {
-			break
-		}
-	}
+	// for {
+	// 	if len(threads) == 0 {
+	// 		break
+	// 	}
+	// }
 
 }

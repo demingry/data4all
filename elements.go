@@ -70,8 +70,6 @@ func (e *Elemtns) findElements(url string,
 
 	e.checkRes(foundElemets)
 
-	fmt.Println(foundElemets)
-
 	return foundElemets
 }
 
