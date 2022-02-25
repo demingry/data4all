@@ -69,7 +69,7 @@ func main() {
 		}
 	}
 
-	fmt.Println(sourceElements)
+	fmt.Println(sourceElements[3])
 
 	// selectors := make(map[string]string)
 	// selectors[`title`] = `span#title`
