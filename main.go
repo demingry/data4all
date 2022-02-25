@@ -57,10 +57,10 @@ func main() {
 		)
 	}
 
-	// for {
-	// 	if len(threads) == 0 {
-	// 		break
-	// 	}
-	// }
+	for {
+		if len(threads) == 0 {
+			break
+		}
+	}
 
 }

@@ -19,6 +19,7 @@ type Elemtns struct {
 */
 func (e *Elemtns) Execute(params ...interface{}) (interface{}, error) {
 
+	defer Finished()
 	selectors, ok := params[1].(map[string]string)
 	ctx, ok := params[2].(*context.Context)
 	cancel, ok := params[3].(context.CancelFunc)
