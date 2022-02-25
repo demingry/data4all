@@ -95,6 +95,7 @@ func (pd *PageFromDriver) sourceFromDriver(url string,
 		url = fmt.Sprintf("%v", newurl)
 	}
 
+	fmt.Println(url)
 	var res string
 	err := chromedp.Run(*ctx,
 		chromedp.Navigate(url),
@@ -108,6 +109,7 @@ func (pd *PageFromDriver) sourceFromDriver(url string,
 		}),
 	)
 
+	fmt.Println("this")
 	if err != nil {
 		fmt.Println("Error in get page source: ", err)
 		return ""
