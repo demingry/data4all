@@ -99,12 +99,14 @@ func (e *Elemtns) checkRes(res map[string]string) {
 
 func (e *Elemtns) Getter(source interface{}) {
 
-	sourceConver, ok := source.(*map[string]string)
+	sourceConver, ok := source.(*[]interface{})
 	if !ok {
 		return
 	}
 
+	ElementsMap := make(map[string]string)
 	for k, v := range e.elements {
-		(*sourceConver)[k] = v
+		ElementsMap[k] = v
 	}
+	(*sourceConver) = append(*sourceConver, ElementsMap)
 }

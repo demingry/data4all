@@ -45,7 +45,7 @@ func main() {
 		}
 	}
 
-	sourceElements := make(map[string]string)
+	var sourceElements []interface{}
 	selectors := make(map[string]string)
 	selectors[`title`] = `span#title`
 	for _, i := range sourceNodes["NodesValue"].([]string) {
