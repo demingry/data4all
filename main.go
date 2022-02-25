@@ -35,11 +35,14 @@ func main() {
 			`href`)
 	}
 
+	fmt.Println("this1")
 	for {
 		if len(threads) == 0 {
 			break
 		}
 	}
+
+	fmt.Println("this2")
 
 	selectors := make(map[string]string)
 	selectors[`title`] = `span#title`
