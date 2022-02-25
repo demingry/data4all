@@ -35,20 +35,18 @@ func main() {
 			`href`)
 	}
 
-	fmt.Println("this1")
 	for {
 		if len(threads) == 0 {
 			break
 		}
 	}
 
-	fmt.Println("this2")
-
 	selectors := make(map[string]string)
 	selectors[`title`] = `span#title`
 	nodesValue := nodes_instance.(IGetter).Getter()[1]
 	for _, i := range nodesValue.([]string) {
 		threads <- struct{}{}
+		fmt.Println(i)
 		elements_instance := NewElements()
 		ctx, cancel := InitDriver()
 		go elements_instance.Execute(
