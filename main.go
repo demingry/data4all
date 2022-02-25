@@ -35,6 +35,12 @@ func main() {
 			`href`)
 	}
 
+	for {
+		if len(threads) == 0 {
+			break
+		}
+	}
+
 	selectors := make(map[string]string)
 	selectors[`title`] = `span#title`
 	nodesValue := nodes_instance.(IGetter).Getter()[1]
