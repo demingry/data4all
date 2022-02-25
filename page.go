@@ -92,6 +92,7 @@ func (pd *PageFromDriver) sourceFromDriver(url string,
 		url = fmt.Sprintf("%v", newurl)
 	}
 
+	fmt.Println(url)
 	var res string
 	err := chromedp.Run(*ctx,
 		chromedp.Navigate(url),
