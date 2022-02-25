@@ -75,7 +75,7 @@ func (pr *PageFromRaw) sourceFromRaw(url string) string {
 }
 
 func (pd *PageFromDriver) sourceFromDriver(url string,
-	ctx *context.Context,
+	ctx1 *context.Context,
 	cancel context.CancelFunc,
 ) string {
 
@@ -83,7 +83,7 @@ func (pd *PageFromDriver) sourceFromDriver(url string,
 
 	if proxy_list := os.Getenv("PROXY_LIST"); proxy_list != "" {
 		sproxy := NewProxy()
-		newurl, err := sproxy.Execute(url, ctx)
+		newurl, err := sproxy.Execute(url, *ctx1)
 		if err != nil {
 			fmt.Println(err)
 			return ""
@@ -93,7 +93,7 @@ func (pd *PageFromDriver) sourceFromDriver(url string,
 	}
 
 	var res string
-	err := chromedp.Run(*ctx,
+	err := chromedp.Run(*ctx1,
 		chromedp.Navigate(url),
 		chromedp.ActionFunc(func(ctx context.Context) error {
 			node, err := dom.GetDocument().Do(ctx)
