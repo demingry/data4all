@@ -16,12 +16,13 @@ type Nodes struct {
 
 /*
 	params[0]url, params[1]selector, params[2]*context.Context,
-	params[3]context.CancelFunc, params[4]attrname(optional)
+	params[3]context.CancelFunc, params[4]attrname(optional), params[5]source(return)
 	return []*cdp.Node or []string(optional attrvalue)
 */
 func (n *Nodes) Execute(params ...interface{}) (interface{}, error) {
 
 	defer Finished()
+	defer n.Getter(params[5])
 
 	ctx, ok := params[2].(*context.Context)
 	cancel, ok := params[3].(context.CancelFunc)
@@ -106,9 +107,21 @@ func NewNodes() Icommand {
 	return &Nodes{}
 }
 
-func (n *Nodes) Getter() []interface{} {
-	var data []interface{}
-	data = append(data, n.Nodes)
-	data = append(data, n.NodesValue)
-	return data
+/*
+	map[string]interface: {"Nodes":[]*cdp.Node, "NodesValue":[]string}
+*/
+func (n *Nodes) Getter(source interface{}) {
+
+	sourceConver, ok := source.(*map[string]interface{})
+	if !ok {
+		return
+	}
+
+	NodesSlice, _ := (*sourceConver)["Nodes"].([]*cdp.Node)
+	NodesSlice = append(NodesSlice, n.Nodes...)
+	(*sourceConver)["Nodes"] = NodesSlice
+
+	NodesValueSlice, _ := (*sourceConver)["NodesValue"].([]string)
+	NodesValueSlice = append(NodesValueSlice, n.NodesValue...)
+	(*sourceConver)["NodesValue"] = NodesValueSlice
 }

@@ -7,7 +7,7 @@ type Icommand interface {
 }
 
 type IGetter interface {
-	Getter() []interface{}
+	Getter(interface{})
 }
 
 //Result Structure

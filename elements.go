@@ -15,11 +15,12 @@ type Elemtns struct {
 
 /*
 	params[0]url, params[1]selectors(map[string]string), params[2]context.Context,
-	params[3]context.CancelFunc
+	params[3]context.CancelFunc, params[4]source(return)
 */
 func (e *Elemtns) Execute(params ...interface{}) (interface{}, error) {
 
 	defer Finished()
+	defer e.Getter(params[4])
 	selectors, ok := params[1].(map[string]string)
 	ctx, ok := params[2].(*context.Context)
 	cancel, ok := params[3].(context.CancelFunc)
@@ -92,9 +93,14 @@ func (e *Elemtns) checkRes(res map[string]string) {
 
 }
 
-func (e *Elemtns) Getter() []interface{} {
+func (e *Elemtns) Getter(source interface{}) {
 
-	var data []interface{}
-	data = append(data, e.elements)
-	return data
+	sourceConver, ok := source.(map[string]string)
+	if !ok {
+		return
+	}
+
+	for k, v := range e.elements {
+		sourceConver[k] = v
+	}
 }
