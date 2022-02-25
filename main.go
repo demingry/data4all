@@ -1,12 +1,7 @@
 package main
 
 import (
-	"fmt"
-	"os"
-	"strconv"
-	"strings"
 	"sync"
-	"time"
 )
 
 var (
@@ -18,33 +13,33 @@ var (
 
 func main() {
 
-	threads_number, _ := strconv.Atoi(os.Getenv("THREADS_NUMBER"))
-	threads = make(chan struct{}, threads_number)
+	// threads_number, _ := strconv.Atoi(os.Getenv("THREADS_NUMBER"))
+	// threads = make(chan struct{}, threads_number)
 
-	params := strings.Split(os.Getenv("REQUEST_PARAMS"), "-")
-	start, _ := strconv.Atoi(params[0])
-	end, _ := strconv.Atoi(params[1])
+	// params := strings.Split(os.Getenv("REQUEST_PARAMS"), "-")
+	// start, _ := strconv.Atoi(params[0])
+	// end, _ := strconv.Atoi(params[1])
 
-	sourceNodes := make(map[string]interface{})
-	for i := start; i < end; i++ {
-		threads <- struct{}{}
-		ctx, cancel := InitDriver()
-		nodes_instance := NewNodes()
-		go nodes_instance.Execute(
-			`https://dataverse.harvard.edu/dataverse/harvard?q=&sort=dateSort&order=desc&types=datasets&page=`+fmt.Sprintf("%d", i),
-			`.card-title-icon-block a`,
-			ctx,
-			cancel,
-			`href`,
-			&sourceNodes,
-		)
-	}
+	// sourceNodes := make(map[string]interface{})
+	// for i := start; i < end; i++ {
+	// 	threads <- struct{}{}
+	// 	ctx, cancel := InitDriver()
+	// 	nodes_instance := NewNodes()
+	// 	go nodes_instance.Execute(
+	// 		`https://dataverse.harvard.edu/dataverse/harvard?q=&sort=dateSort&order=desc&types=datasets&page=`+fmt.Sprintf("%d", i),
+	// 		`.card-title-icon-block a`,
+	// 		ctx,
+	// 		cancel,
+	// 		`href`,
+	// 		&sourceNodes,
+	// 	)
+	// }
 
-	for {
-		if len(threads) == 0 {
-			break
-		}
-	}
+	// for {
+	// 	if len(threads) == 0 {
+	// 		break
+	// 	}
+	// }
 
 	// var sourceElements []interface{}
 	// selectors := make(map[string]string)
@@ -63,29 +58,35 @@ func main() {
 	// 	)
 	// }
 
+	// var sourcePage []string
+	// for _, i := range sourceNodes["NodesValue"].([]string) {
+	// 	threads <- struct{}{}
+	// 	page_instance := NewPage(`PageFromDriver`)
+	// 	ctx, cancel := InitDriver()
+	// 	go page_instance.Execute(
+	// 		`https://dataverse.harvard.edu`+i,
+	// 		ctx,
+	// 		cancel,
+	// 		&sourcePage,
+	// 	)
+
+	// 	time.Sleep(3 * time.Second)
+
+	// }
+
 	var sourcePage []string
-	for _, i := range sourceNodes["NodesValue"].([]string) {
-		threads <- struct{}{}
-		page_instance := NewPage(`PageFromDriver`)
-		ctx, cancel := InitDriver()
-		go page_instance.Execute(
-			`https://dataverse.harvard.edu`+i,
-			ctx,
-			cancel,
-			&sourcePage,
-		)
-
-		time.Sleep(3 * time.Second)
-
-	}
-
-	for {
-		if len(threads) == 0 {
-			break
-		}
-	}
-
-	fmt.Println(len(sourcePage))
-	fmt.Println(sourcePage)
+	page_instance := NewPage(`PageFromDriver`)
+	ctx, cancel := InitDriver()
+	go page_instance.Execute(
+		`https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/NKCQM1`,
+		ctx,
+		cancel,
+		&sourcePage,
+	)
+	// for {
+	// 	if len(threads) == 0 {
+	// 		break
+	// 	}
+	// }
 
 }

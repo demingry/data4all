@@ -24,12 +24,15 @@ type PageFromRaw struct {
 */
 func (pd *PageFromDriver) Execute(params ...interface{}) (interface{}, error) {
 
-	defer Finished()
+	// defer Finished()
 	defer pd.Getter(params[3])
-	if len(params) < 3 {
+	if len(params) < 4 {
 		return nil, fmt.Errorf("Not enough params")
 	}
 	ctx, ok := params[1].(*context.Context)
+	if !ok {
+		return nil, fmt.Errorf("Wrong type in params")
+	}
 	cancel, ok := params[2].(context.CancelFunc)
 	if !ok {
 		return nil, fmt.Errorf("Wrong type in params")
@@ -75,7 +78,7 @@ func (pr *PageFromRaw) sourceFromRaw(url string) string {
 }
 
 func (pd *PageFromDriver) sourceFromDriver(url string,
-	ctx1 *context.Context,
+	ctx *context.Context,
 	cancel context.CancelFunc,
 ) string {
 
@@ -83,7 +86,7 @@ func (pd *PageFromDriver) sourceFromDriver(url string,
 
 	if proxy_list := os.Getenv("PROXY_LIST"); proxy_list != "" {
 		sproxy := NewProxy()
-		newurl, err := sproxy.Execute(url, *ctx1)
+		newurl, err := sproxy.Execute(url, *ctx)
 		if err != nil {
 			fmt.Println(err)
 			return ""
@@ -93,7 +96,7 @@ func (pd *PageFromDriver) sourceFromDriver(url string,
 	}
 
 	var res string
-	err := chromedp.Run(*ctx1,
+	err := chromedp.Run(*ctx,
 		chromedp.Navigate(url),
 		chromedp.ActionFunc(func(ctx context.Context) error {
 			node, err := dom.GetDocument().Do(ctx)
