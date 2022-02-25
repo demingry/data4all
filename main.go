@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"time"
 )
 
 var (
@@ -73,6 +74,8 @@ func main() {
 			cancel,
 			&sourcePage,
 		)
+
+		time.Sleep(3 * time.Second)
 
 	}
 
