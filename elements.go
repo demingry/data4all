@@ -97,6 +97,7 @@ func (e *Elemtns) Getter(source interface{}) {
 
 	sourceConver, ok := source.(*map[string]string)
 	if !ok {
+		fmt.Println("this1")
 		return
 	}
 
