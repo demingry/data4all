@@ -27,6 +27,7 @@ func main() {
 	sourceNodes := make(map[string]interface{})
 	for i := start; i < end; i++ {
 		threads <- struct{}{}
+		fmt.Println(i)
 		ctx, cancel := InitDriver()
 		nodes_instance := NewNodes()
 		go nodes_instance.Execute(
