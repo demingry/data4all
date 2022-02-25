@@ -78,7 +78,7 @@ func main() {
 	var sourcePage []string
 	page_instance := NewPage(`PageFromDriver`)
 	ctx, cancel := InitDriver()
-	go page_instance.Execute(
+	page_instance.Execute(
 		`https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/NKCQM1`,
 		ctx,
 		cancel,
