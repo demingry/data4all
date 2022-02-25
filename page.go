@@ -6,25 +6,45 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/chromedp/cdproto/dom"
 	"github.com/chromedp/chromedp"
 )
 
 type PageFromDriver struct {
+	pagesource string
 }
 
 type PageFromRaw struct {
+	pagesource string
 }
 
+/*
+	params[0]url, params[1]context.Context, params[2]context.CancelFunc
+*/
 func (pd *PageFromDriver) Execute(params ...interface{}) (interface{}, error) {
 
+	defer Finished()
+	if len(params) < 3 {
+		return nil, fmt.Errorf("Not enough params")
+	}
+	ctx, ok := params[1].(*context.Context)
+	cancel, ok := params[2].(context.CancelFunc)
+	if !ok {
+		return nil, fmt.Errorf("Wrong type in params")
+	}
+
+	pd.sourceFromDriver(fmt.Sprintf("%v", params[0]), ctx, cancel)
 	return nil, nil
 }
 
+/*
+	params[0]url
+*/
 func (pr *PageFromRaw) Execute(params ...interface{}) (interface{}, error) {
 
+	defer Finished()
+	pr.sourceFromRaw(fmt.Sprintf("%v", params[0]))
 	return nil, nil
 }
 
@@ -52,24 +72,10 @@ func (pr *PageFromRaw) sourceFromRaw(url string) string {
 	return string(body)
 }
 
-func (pd *PageFromDriver) sourceFromDriver(url string) string {
-
-	opt := []func(allocator *chromedp.ExecAllocator){
-		chromedp.ExecPath(os.Getenv("GOOGLE_CHROME_SHIM")),
-		chromedp.Flag("headless", true),
-		chromedp.Flag("disable-dev-shm-usage", true),
-		chromedp.Flag("diable-extensions", true),
-		chromedp.Flag("disable-gpu", true),
-		chromedp.Flag("--no-sandbox", true),
-	}
-
-	allocatorCtx, _ := chromedp.NewExecAllocator(
-		context.Background(),
-		append(opt, chromedp.DefaultExecAllocatorOptions[:]...)[:]...,
-	)
-
-	ctx, cancel := chromedp.NewContext(allocatorCtx)
-	ctx, cancel = context.WithTimeout(ctx, 25*time.Second)
+func (pd *PageFromDriver) sourceFromDriver(url string,
+	ctx *context.Context,
+	cancel context.CancelFunc,
+) string {
 
 	defer cancel()
 
@@ -85,7 +91,7 @@ func (pd *PageFromDriver) sourceFromDriver(url string) string {
 	}
 
 	var res string
-	err := chromedp.Run(ctx,
+	err := chromedp.Run(*ctx,
 		chromedp.Navigate(url),
 		chromedp.ActionFunc(func(ctx context.Context) error {
 			node, err := dom.GetDocument().Do(ctx)
@@ -113,4 +119,18 @@ func NewPage(pagetype string) Icommand {
 	}
 
 	return &PageFromRaw{}
+}
+
+func (pd *PageFromDriver) Getter() []interface{} {
+
+	var data []interface{}
+	data = append(data, pd.pagesource)
+	return data
+}
+
+func (pr *PageFromRaw) Getter() []interface{} {
+
+	var data []interface{}
+	data = append(data, pr.pagesource)
+	return data
 }

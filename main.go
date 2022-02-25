@@ -26,7 +26,13 @@ func main() {
 	nodes_instance := NewNodes()
 	for i := start; i < end; i++ {
 		threads <- struct{}{}
-		go nodes_instance.Execute(`https://dataverse.harvard.edu/dataverse/harvard?q=&sort=dateSort&order=desc&types=datasets&page=`+fmt.Sprintf("%d", i), `.card-title-icon-block a`, `href`)
+		ctx, cancel := InitDriver()
+		go nodes_instance.Execute(
+			`https://dataverse.harvard.edu/dataverse/harvard?q=&sort=dateSort&order=desc&types=datasets&page=`+fmt.Sprintf("%d", i),
+			`.card-title-icon-block a`,
+			ctx,
+			cancel,
+			`href`)
 	}
 
 	nodesValue := nodes_instance.(IGetter).Getter()[1]

@@ -14,37 +14,26 @@ type Elemtns struct {
 }
 
 /*
-	params[0]url, params[1]selectors
+	params[0]url, params[1]selectors(map[string]string), params[2]context.Context,
+	params[3]context.CancelFunc
 */
 func (e *Elemtns) Execute(params ...interface{}) (interface{}, error) {
 
 	selectors, ok := params[1].(map[string]string)
-
+	ctx, ok := params[2].(*context.Context)
+	cancel, ok := params[3].(context.CancelFunc)
 	if !ok {
-		return nil, fmt.Errorf("Wrong map[string]string type in params")
+		return nil, fmt.Errorf("Wrong type in params")
 	}
-	elements := e.findElements(fmt.Sprintf("%v", params[0]), selectors)
+	elements := e.findElements(fmt.Sprintf("%v", params[0]), selectors, ctx, cancel)
 	return elements, nil
 }
 
-func (e *Elemtns) findElements(url string, selectors map[string]string) map[string]string {
-
-	opt := []func(allocator *chromedp.ExecAllocator){
-		chromedp.ExecPath(os.Getenv("GOOGLE_CHROME_SHIM")),
-		chromedp.Flag("headless", true),
-		chromedp.Flag("disable-dev-shm-usage", true),
-		chromedp.Flag("diable-extensions", true),
-		chromedp.Flag("disable-gpu", true),
-		chromedp.Flag("--no-sandbox", true),
-	}
-
-	allocatorCtx, _ := chromedp.NewExecAllocator(
-		context.Background(),
-		append(opt, chromedp.DefaultExecAllocatorOptions[:]...)[:]...,
-	)
-
-	ctx, cancel := chromedp.NewContext(allocatorCtx)
-	ctx, cancel = context.WithTimeout(ctx, 100*time.Second)
+func (e *Elemtns) findElements(url string,
+	selectors map[string]string,
+	ctx *context.Context,
+	cancel context.CancelFunc,
+) map[string]string {
 
 	defer cancel()
 	if proxy_list := os.Getenv("PROXY_LIST"); proxy_list != "" {
@@ -60,8 +49,8 @@ func (e *Elemtns) findElements(url string, selectors map[string]string) map[stri
 		url = fmt.Sprintf("%v", newurl)
 	}
 
-	var foundElemets map[string]string
-	if err := chromedp.Run(ctx,
+	foundElemets := make(map[string]string)
+	if err := chromedp.Run(*ctx,
 		chromedp.Navigate(url),
 	); err != nil {
 		fmt.Println("Navigate: ", err)
@@ -70,7 +59,7 @@ func (e *Elemtns) findElements(url string, selectors map[string]string) map[stri
 	for k, v := range selectors {
 
 		var tmp string
-		ctxchild, _ := context.WithTimeout(ctx, 15*time.Second)
+		ctxchild, _ := context.WithTimeout(*ctx, 15*time.Second)
 		if err := chromedp.Run(ctxchild,
 			chromedp.Text(v, &tmp, chromedp.BySearch),
 		); err != nil {
@@ -82,6 +71,16 @@ func (e *Elemtns) findElements(url string, selectors map[string]string) map[stri
 	e.checkRes(foundElemets)
 
 	return foundElemets
+}
+
+func (e *Elemtns) clickElements(selector string, ctx *context.Context) {
+
+	if err := chromedp.Run(*ctx,
+		chromedp.Click(selector, chromedp.BySearch),
+	); err != nil {
+		fmt.Println("Click: ", err)
+		return
+	}
 }
 
 func NewElements() Icommand {
