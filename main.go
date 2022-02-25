@@ -3,9 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
-	"os"
 	"sync"
-	"time"
 
 	"github.com/chromedp/cdproto/dom"
 	"github.com/chromedp/chromedp"
@@ -17,28 +15,6 @@ var (
 	mu       sync.Mutex
 	transfer chan interface{}
 )
-
-func InitDriver() (*context.Context, context.CancelFunc) {
-
-	opt := []func(allocator *chromedp.ExecAllocator){
-		chromedp.ExecPath(os.Getenv("GOOGLE_CHROME_SHIM")),
-		chromedp.Flag("headless", true),
-		chromedp.Flag("disable-dev-shm-usage", true),
-		chromedp.Flag("diable-extensions", true),
-		chromedp.Flag("disable-gpu", true),
-		chromedp.Flag("--no-sandbox", true),
-	}
-
-	allocatorCtx, _ := chromedp.NewExecAllocator(
-		context.Background(),
-		append(opt, chromedp.DefaultExecAllocatorOptions[:]...)[:]...,
-	)
-
-	ctx, cancel := chromedp.NewContext(allocatorCtx)
-	ctx, cancel = context.WithTimeout(ctx, 25*time.Second)
-
-	return &ctx, cancel
-}
 
 func sourceFromDriver(url string) {
 
