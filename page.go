@@ -113,6 +113,7 @@ func (pd *PageFromDriver) sourceFromDriver(url string,
 		return ""
 	}
 
+	fmt.Println("pagesource: ", res)
 	return res
 
 }
