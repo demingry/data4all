@@ -6,7 +6,6 @@ import (
 	"strconv"
 	"strings"
 	"sync"
-	"time"
 )
 
 var (
@@ -63,26 +62,28 @@ func main() {
 	// 	)
 	// }
 
-	var sourcePage []string
-	for _, i := range sourceNodes["NodesValue"].([]string) {
-		threads <- struct{}{}
-		page_instance := NewPage(`PageFromDriver`)
-		ctx, cancel := InitDriver()
-		go page_instance.Execute(
-			`https://dataverse.harvard.edu`+i,
-			ctx,
-			cancel,
-			&sourcePage,
-		)
+	// var sourcePage []string
+	// for _, i := range sourceNodes["NodesValue"].([]string) {
+	// 	threads <- struct{}{}
+	// 	page_instance := NewPage(`PageFromDriver`)
+	// 	ctx, cancel := InitDriver()
+	// 	go page_instance.Execute(
+	// 		`https://dataverse.harvard.edu`+i,
+	// 		ctx,
+	// 		cancel,
+	// 		&sourcePage,
+	// 	)
 
-		time.Sleep(3 * time.Second)
+	// }
 
-	}
+	// for {
+	// 	if len(threads) == 0 {
+	// 		break
+	// 	}
+	// }
 
-	for {
-		if len(threads) == 0 {
-			break
-		}
-	}
+	res := ChunkSlice(sourceNodes["NodesValue"].([]interface{}), 3)
+
+	fmt.Println(res)
 
 }
