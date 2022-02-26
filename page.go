@@ -38,9 +38,6 @@ func (pd *PageFromDriver) Execute(params ...interface{}) (interface{}, error) {
 	}
 
 	pd.pagesource = pd.sourceFromDriver(fmt.Sprintf("%v", params[0]), ctx, cancel)
-	if pd.pagesource == "" {
-		fmt.Println("empty")
-	}
 	return nil, nil
 }
 
