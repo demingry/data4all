@@ -124,6 +124,7 @@ func NewPage(pagetype string) Icommand {
 */
 func (pd *PageFromDriver) Getter(source interface{}) {
 
+	mu.Lock()
 	sourceConver, ok := source.(*[]string)
 	if !ok {
 		return
@@ -131,6 +132,7 @@ func (pd *PageFromDriver) Getter(source interface{}) {
 
 	*sourceConver = append(*sourceConver, pd.pagesource)
 
+	mu.Unlock()
 }
 
 /*
