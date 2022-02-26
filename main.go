@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"reflect"
 	"strconv"
 	"strings"
 	"sync"
@@ -84,13 +85,15 @@ func main() {
 
 	res := ChunkSlice(sourceNodes["NodesValue"], 3)
 
-	resres, ok := res.([]string)
-	if !ok {
-		fmt.Println("err in ok")
-	}
+	// resres, ok := res.([]string)
+	// if !ok {
+	// 	fmt.Println("err in ok")
+	// }
 
-	for _, v := range resres {
-		fmt.Println(v)
-	}
+	// for _, v := range resres {
+	// 	fmt.Println(v)
+	// }
+
+	fmt.Println(reflect.TypeOf(res))
 
 }
