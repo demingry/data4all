@@ -9,9 +9,9 @@ import (
 )
 
 var (
-	threads  chan struct{}
-	t        int64
-	mu       sync.Mutex
+	threads chan struct{}
+	t       int64
+	mu      sync.Mutex
 )
 
 func main() {
@@ -61,22 +61,19 @@ func main() {
 	// 	)
 	// }
 
-	chunked := ChunkSlice(sourceNodes["NodesValue"], 3)
+	// chunked := ChunkSlice(sourceNodes["NodesValue"], 3)
 
-	for _, i := range chunked.([][]string) {
-		var sourcePage []string
-		for _, v := range i {
-
-			threads <- struct{}{}
-			page_instance := NewPage(`PageFromDriver`)
-			ctx, cancel := InitDriver()
-			go page_instance.Execute(
-				`https://dataverse.harvard.edu`+v,
-				ctx,
-				cancel,
-				&sourcePage,
-			)
-		}
+	var sourcePage []string
+	for _, i := range sourceNodes["NodesValue"].([]string) {
+		threads <- struct{}{}
+		page_instance := NewPage(`PageFromDriver`)
+		ctx, cancel := InitDriver()
+		go page_instance.Execute(
+			`https://dataverse.harvard.edu`+i,
+			ctx,
+			cancel,
+			&sourcePage,
+		)
 
 		fmt.Println(len(sourcePage))
 	}
