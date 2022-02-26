@@ -61,21 +61,25 @@ func main() {
 	// 	)
 	// }
 
-	// chunked := ChunkSlice(sourceNodes["NodesValue"], 3)
+	chunked := ChunkSlice(sourceNodes["NodesValue"], 3)
 
-	var sourcePage []string
-	for _, i := range sourceNodes["NodesValue"].([]string) {
-		threads <- struct{}{}
-		page_instance := NewPage(`PageFromDriver`)
-		ctx, cancel := InitDriver()
-		go page_instance.Execute(
-			`https://dataverse.harvard.edu`+i,
-			ctx,
-			cancel,
-			&sourcePage,
-		)
+	var a int = 0
+	for _, i := range chunked.([][]string) {
+		var sourcePage []string
+		for _, v := range i {
+			a++
+			threads <- struct{}{}
+			page_instance := NewPage(`PageFromDriver`)
+			ctx, cancel := InitDriver()
+			go page_instance.Execute(
+				`https://dataverse.harvard.edu`+v,
+				ctx,
+				cancel,
+				&sourcePage,
+			)
+		}
 
-		fmt.Println(len(sourcePage))
+		fmt.Println(a, '/', len(sourcePage))
 	}
 
 	for {
