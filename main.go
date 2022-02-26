@@ -82,7 +82,7 @@ func main() {
 	// 	}
 	// }
 
-	res := ChunkSlice(sourceNodes["NodesValue"].([]interface{}), 3)
+	res := ChunkSlice(sourceNodes["NodesValue"], 3)
 
 	fmt.Println(res)
 

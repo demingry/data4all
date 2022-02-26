@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"os"
+	"reflect"
 	"time"
 
 	"github.com/chromedp/chromedp"
@@ -50,17 +51,26 @@ func InitDriver() (*context.Context, context.CancelFunc) {
 	return &ctx, cancel
 }
 
-func ChunkSlice(slice []interface{}, chunkSize int) [][]interface{} {
-	var chunks [][]interface{}
-	for i := 0; i < len(slice); i += chunkSize {
-		end := i + chunkSize
-
-		if end > len(slice) {
-			end = len(slice)
-		}
-
-		chunks = append(chunks, slice[i:end])
+func ChunkSlice(slice interface{}, chunkSize int) interface{} {
+	sliceType := reflect.TypeOf(slice)
+	sliceVal := reflect.ValueOf(slice)
+	length := sliceVal.Len()
+	if sliceType.Kind() != reflect.Slice {
+		panic("parameter must be []T")
 	}
-
-	return chunks
+	n := 0
+	if length%chunkSize > 0 {
+		n = 1
+	}
+	SST := reflect.MakeSlice(reflect.SliceOf(sliceType), 0, length/chunkSize+n)
+	st, ed := 0, 0
+	for st < length {
+		ed = st + chunkSize
+		if ed > length {
+			ed = length
+		}
+		SST = reflect.Append(SST, sliceVal.Slice(st, ed))
+		st = ed
+	}
+	return SST.Interface()
 }
