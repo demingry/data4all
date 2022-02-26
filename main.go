@@ -85,6 +85,4 @@ func main() {
 		}
 	}
 
-	fmt.Println(sourcePage[1])
-
 }
