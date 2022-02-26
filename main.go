@@ -65,9 +65,7 @@ func main() {
 
 	for _, i := range chunked.([][]string) {
 		var sourcePage []string
-		var a int = 0
 		for _, v := range i {
-			a++
 			threads <- struct{}{}
 			page_instance := NewPage(`PageFromDriver`)
 			ctx, cancel := InitDriver()
@@ -79,7 +77,7 @@ func main() {
 			)
 		}
 
-		fmt.Println(a + '/' + len(sourcePage))
+		fmt.Println(len(sourcePage))
 	}
 
 	for {
