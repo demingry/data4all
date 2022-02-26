@@ -7,13 +7,16 @@ import (
 )
 
 type Soup struct {
+	soupElement string
 }
 
 /*
-	params[0]HTMLBody, params[1]selector
+	params[0]HTMLBody, params[1]selector([]string), params[2]source(return)
 */
 func (s *Soup) Execute(params ...interface{}) (interface{}, error) {
 
+	defer Finished()
+	defer s.Getter(params[2])
 	selector, ok := params[1].([]string)
 	if !ok {
 		return nil, fmt.Errorf("Unexpectable params")
@@ -37,4 +40,16 @@ func (s *Soup) soupParse(body string, selector []string) string {
 
 func NewSoup() Icommand {
 	return &Soup{}
+}
+
+func (s *Soup) Getter(source interface{}) {
+
+	mu.Lock()
+	sourceConver, ok := source.(*[]string)
+	if !ok {
+		return
+	}
+
+	*sourceConver = append(*sourceConver, s.soupElement)
+	mu.Unlock()
 }

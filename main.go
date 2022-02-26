@@ -85,8 +85,24 @@ func main() {
 			}
 		}
 
-		fmt.Println("Length: " + fmt.Sprintf("%d", a))
-		fmt.Println("sourcePage: " + fmt.Sprintf("%d", len(sourcePage)))
+		var sourceSoup []string
+		for _, v := range sourcePage {
+
+			soup_instance := NewSoup()
+			go soup_instance.Execute(
+				v,
+				[]string{`script`, `type`, `application/ld+json`},
+				&sourceSoup,
+			)
+		}
+
+		for {
+			if len(threads) == 0 {
+				break
+			}
+		}
+
+		fmt.Println(sourceSoup)
 	}
 
 	for {
