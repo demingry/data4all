@@ -61,7 +61,7 @@ func main() {
 	// 	)
 	// }
 
-	chunked := ChunkSlice(sourceNodes["NodesValue"], 3)
+	chunked := ChunkSlice(sourceNodes["NodesValue"], 4)
 
 	for _, i := range chunked.([][]string) {
 		var sourcePage []string
