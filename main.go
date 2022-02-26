@@ -62,35 +62,30 @@ func main() {
 	// 	)
 	// }
 
-	// var sourcePage []string
-	// for _, i := range sourceNodes["NodesValue"].([]string) {
-	// 	threads <- struct{}{}
-	// 	page_instance := NewPage(`PageFromDriver`)
-	// 	ctx, cancel := InitDriver()
-	// 	go page_instance.Execute(
-	// 		`https://dataverse.harvard.edu`+i,
-	// 		ctx,
-	// 		cancel,
-	// 		&sourcePage,
-	// 	)
+	chunked := ChunkSlice(sourceNodes["NodesValue"], 3)
 
-	// }
+	for _, i := range chunked.([][]string) {
+		var sourcePage []string
+		for _, v := range i {
 
-	// for {
-	// 	if len(threads) == 0 {
-	// 		break
-	// 	}
-	// }
+			threads <- struct{}{}
+			page_instance := NewPage(`PageFromDriver`)
+			ctx, cancel := InitDriver()
+			go page_instance.Execute(
+				`https://dataverse.harvard.edu`+v,
+				ctx,
+				cancel,
+				&sourcePage,
+			)
+		}
 
-	res := ChunkSlice(sourceNodes["NodesValue"], 3)
-
-	resres, ok := res.([][]string)
-	if !ok {
-		fmt.Println("err in ok")
+		fmt.Println(len(sourcePage))
 	}
 
-	for _, v := range resres {
-		fmt.Println(v)
+	for {
+		if len(threads) == 0 {
+			break
+		}
 	}
 
 }
