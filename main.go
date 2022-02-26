@@ -100,7 +100,7 @@ func main() {
 			}
 		}
 
-		fmt.Println(sourceSoup)
+		fmt.Println(sourceSoup[1])
 	}
 
 	for {
