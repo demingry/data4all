@@ -141,10 +141,12 @@ func (pd *PageFromDriver) Getter(source interface{}) {
 */
 func (pr *PageFromRaw) Getter(source interface{}) {
 
+	mu.Lock()
 	sourceConver, ok := source.(*[]string)
 	if !ok {
 		return
 	}
 
 	*sourceConver = append(*sourceConver, pr.pagesource)
+	mu.Unlock()
 }
