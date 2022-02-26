@@ -83,6 +83,7 @@ func (pd *PageFromDriver) sourceFromDriver(url string,
 
 	defer cancel()
 
+	fmt.Println(url)
 	if proxy_list := os.Getenv("PROXY_LIST"); proxy_list != "" {
 		sproxy := NewProxy()
 		newurl, err := sproxy.Execute(url, *ctx)
