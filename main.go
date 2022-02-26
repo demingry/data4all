@@ -84,6 +84,13 @@ func main() {
 
 	res := ChunkSlice(sourceNodes["NodesValue"], 3)
 
-	fmt.Println(res)
+	resres, ok := res.([]string)
+	if !ok {
+		fmt.Println("err in ok")
+	}
+
+	for _, v := range resres {
+		fmt.Println(v)
+	}
 
 }
