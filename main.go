@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"time"
 )
 
 var (
@@ -79,6 +80,7 @@ func main() {
 			)
 		}
 
+		time.Sleep(10 * time.Second)
 		fmt.Println("Length: " + fmt.Sprintf("%d", a))
 		fmt.Println("sourcePage: " + fmt.Sprintf("%d", len(sourcePage)))
 	}
