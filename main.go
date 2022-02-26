@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 	"strconv"
 	"strings"
@@ -16,6 +17,12 @@ var (
 )
 
 func main() {
+
+	f, err := os.Create(`results`)
+	if err != nil {
+		log.Fatal(err)
+	}
+	f.Close()
 
 	threads_number, _ := strconv.Atoi(os.Getenv("THREADS_NUMBER"))
 	threads = make(chan struct{}, threads_number)
