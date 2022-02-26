@@ -63,9 +63,9 @@ func main() {
 
 	chunked := ChunkSlice(sourceNodes["NodesValue"], 3)
 
-	var a int = 0
 	for _, i := range chunked.([][]string) {
 		var sourcePage []string
+		var a int = 0
 		for _, v := range i {
 			a++
 			threads <- struct{}{}
@@ -79,7 +79,7 @@ func main() {
 			)
 		}
 
-		fmt.Println(a, '/', len(sourcePage))
+		fmt.Println(a + '/' + len(sourcePage))
 	}
 
 	for {
