@@ -6,7 +6,6 @@ import (
 	"strconv"
 	"strings"
 	"sync"
-	"time"
 )
 
 var (
@@ -80,7 +79,12 @@ func main() {
 			)
 		}
 
-		time.Sleep(10 * time.Second)
+		for {
+			if len(threads) == 0 {
+				break
+			}
+		}
+
 		fmt.Println("Length: " + fmt.Sprintf("%d", a))
 		fmt.Println("sourcePage: " + fmt.Sprintf("%d", len(sourcePage)))
 	}
