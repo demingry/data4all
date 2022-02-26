@@ -65,9 +65,7 @@ func main() {
 
 	for _, i := range chunked.([][]string) {
 		var sourcePage []string
-		var a int = 0
 		for _, v := range i {
-			a++
 			threads <- struct{}{}
 			page_instance := NewPage(`PageFromDriver`)
 			ctx, cancel := InitDriver()
@@ -87,7 +85,7 @@ func main() {
 
 		var sourceSoup []string
 		for _, v := range sourcePage {
-
+			threads <- struct{}{}
 			soup_instance := NewSoup()
 			go soup_instance.Execute(
 				v,
@@ -101,6 +99,8 @@ func main() {
 				break
 			}
 		}
+
+		fmt.Println(sourceSoup)
 	}
 
 	for {

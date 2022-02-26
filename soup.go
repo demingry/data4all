@@ -23,7 +23,6 @@ func (s *Soup) Execute(params ...interface{}) (interface{}, error) {
 	}
 	s.soupElement = s.soupParse(fmt.Sprintf("%v", params[0]), selector)
 
-	fmt.Println(s.soupElement)
 	return nil, nil
 }
 
