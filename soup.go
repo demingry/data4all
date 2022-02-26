@@ -22,6 +22,8 @@ func (s *Soup) Execute(params ...interface{}) (interface{}, error) {
 		return nil, fmt.Errorf("Unexpectable params")
 	}
 	s.soupElement = s.soupParse(fmt.Sprintf("%v", params[0]), selector)
+
+	fmt.Println(s.soupElement)
 	return nil, nil
 }
 

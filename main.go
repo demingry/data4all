@@ -101,8 +101,6 @@ func main() {
 				break
 			}
 		}
-
-		fmt.Println(sourceSoup)
 	}
 
 	for {
