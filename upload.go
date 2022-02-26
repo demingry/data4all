@@ -36,6 +36,8 @@ func (u *Upload) doUpload(filename string, identifier string) {
 	if _, err := db.Exec(`INSERT INTO data(url ,info) VALUES ($1, $2)`, string(out), identifier); err != nil {
 		log.Fatal(err)
 	}
+
+	fmt.Println(out)
 }
 
 func NewUpload() Icommand {
