@@ -38,6 +38,9 @@ func (pd *PageFromDriver) Execute(params ...interface{}) (interface{}, error) {
 	}
 
 	pd.pagesource = pd.sourceFromDriver(fmt.Sprintf("%v", params[0]), ctx, cancel)
+	if pd.pagesource == "" {
+		fmt.Println("empty")
+	}
 	return nil, nil
 }
 
@@ -83,7 +86,6 @@ func (pd *PageFromDriver) sourceFromDriver(url string,
 
 	defer cancel()
 
-	fmt.Println(url)
 	if proxy_list := os.Getenv("PROXY_LIST"); proxy_list != "" {
 		sproxy := NewProxy()
 		newurl, err := sproxy.Execute(url, *ctx)
