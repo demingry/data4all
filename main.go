@@ -33,6 +33,7 @@ func main() {
 
 	sourceNodes := make(map[string]interface{})
 	for i := start; i < end; i++ {
+		fmt.Println("Scraped Page: " + fmt.Sprintf("%d", i))
 		threads <- struct{}{}
 		ctx, cancel := InitDriver()
 		nodes_instance := NewNodes()
@@ -75,6 +76,7 @@ func main() {
 		var sourcePage []string
 		for _, v := range i {
 			threads <- struct{}{}
+			fmt.Println(v)
 			page_instance := NewPage(`PageFromDriver`)
 			ctx, cancel := InitDriver()
 			go page_instance.Execute(
