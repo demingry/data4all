@@ -136,6 +136,6 @@ func main() {
 	}
 
 	upload_instance := NewUpload()
-	upload_instance.Execute(`results`, `datagovuk/1-8`)
+	upload_instance.Execute(`results`, os.Getenv(`INFO`))
 
 }
