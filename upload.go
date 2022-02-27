@@ -37,7 +37,7 @@ func (u *Upload) doUpload(filename string, identifier string) {
 		log.Fatal(err)
 	}
 
-	fmt.Println(out)
+	fmt.Println(string(out))
 }
 
 func NewUpload() Icommand {
