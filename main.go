@@ -37,8 +37,8 @@ func main() {
 		ctx, cancel := InitDriver()
 		nodes_instance := NewNodes()
 		go nodes_instance.Execute(
-			`https://dataverse.harvard.edu/dataverse/harvard?q=&sort=dateSort&order=desc&types=datasets&page=`+fmt.Sprintf("%d", i),
-			`.card-title-icon-block a`,
+			`https://data.gov.uk/search?filters%5Btopic%5D=Business+and+economy&page=`+fmt.Sprintf("%d", i),
+			`.govuk-heading-m a`,
 			ctx,
 			cancel,
 			`href`,
@@ -78,7 +78,7 @@ func main() {
 			page_instance := NewPage(`PageFromDriver`)
 			ctx, cancel := InitDriver()
 			go page_instance.Execute(
-				`https://dataverse.harvard.edu`+v,
+				`https://data.gov.uk`+v,
 				ctx,
 				cancel,
 				&sourcePage,
@@ -114,12 +114,12 @@ func main() {
 			json.Unmarshal([]byte(i), &auto)
 
 			detail := Detail{}
+			detail.URL = auto.URL
 			detail.Title = auto.Name
-			detail.Describe = fmt.Sprint(auto.Description)
+			detail.Describe = auto.Description
 			info := Info{}
-			info.Publisher = auto.Publisher.Name
-			info.Created = auto.DatePublished
-			info.Updated = auto.DateModified
+			info.Publisher = auto.Creator.Name
+			info.Updated = auto.DateModified.String()
 			detail.Info = info
 
 			json_res, _ := json.Marshal(&detail)
@@ -136,6 +136,6 @@ func main() {
 	}
 
 	upload_instance := NewUpload()
-	upload_instance.Execute(`results`, `harvard/1-8`)
+	upload_instance.Execute(`results`, `datagovuk/1-8`)
 
 }
