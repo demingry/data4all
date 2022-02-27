@@ -38,7 +38,7 @@ func main() {
 		ctx, cancel := InitDriver()
 		nodes_instance := NewNodes()
 		go nodes_instance.Execute(
-			`https://data.gov.uk/search?filters%5Btopic%5D=Towns+and+cities&page=`+fmt.Sprintf("%d", i),
+			`https://data.gov.uk/search?filters%5Btopic%5D=Crime+and+justice&page=`+fmt.Sprintf("%d", i),
 			`.govuk-heading-m a`,
 			ctx,
 			cancel,
