@@ -6,7 +6,6 @@ import (
 	"log"
 	"os"
 	"strconv"
-	"strings"
 	"sync"
 )
 
@@ -27,25 +26,29 @@ func main() {
 	threads_number, _ := strconv.Atoi(os.Getenv("THREADS_NUMBER"))
 	threads = make(chan struct{}, threads_number)
 
-	params := strings.Split(os.Getenv("REQUEST_PARAMS"), "-")
-	start, _ := strconv.Atoi(params[0])
-	end, _ := strconv.Atoi(params[1])
+	// params := strings.Split(os.Getenv("REQUEST_PARAMS"), "-")
+	// start, _ := strconv.Atoi(params[0])
+	// end, _ := strconv.Atoi(params[1])
 
-	sourceNodes := make(map[string]interface{})
-	for i := start; i < end; i++ {
-		fmt.Println("Scraped Page: " + fmt.Sprintf("%d", i))
-		threads <- struct{}{}
-		ctx, cancel := InitDriver()
-		nodes_instance := NewNodes()
-		go nodes_instance.Execute(
-			`https://data.gov.uk/search?filters%5Btopic%5D=Society&page=`+fmt.Sprintf("%d", i),
-			`.govuk-heading-m a`,
-			ctx,
-			cancel,
-			`href`,
-			&sourceNodes,
-		)
-	}
+	// sourceNodes := make(map[string]interface{})
+	// for i := start; i < end; i++ {
+	// 	fmt.Println("Scraped Page: " + fmt.Sprintf("%d", i))
+	// 	threads <- struct{}{}
+	// 	ctx, cancel := InitDriver()
+	// 	nodes_instance := NewNodes()
+	// 	go nodes_instance.Execute(
+	// 		`https://data.gov.uk/search?filters%5Btopic%5D=Society&page=`+fmt.Sprintf("%d", i),
+	// 		`.govuk-heading-m a`,
+	// 		ctx,
+	// 		cancel,
+	// 		`href`,
+	// 		&sourceNodes,
+	// 	)
+	// }
+
+	var sourceSitemap []string
+	sitemap_instance := NewSitemap()
+	sitemap_instance.Execute(os.Getenv(`SITEMAP`), &sourceSitemap)
 
 	for {
 		if len(threads) == 0 {
@@ -70,7 +73,7 @@ func main() {
 	// 	)
 	// }
 
-	chunked := ChunkSlice(sourceNodes["NodesValue"], 4)
+	chunked := ChunkSlice(sourceSitemap, 4)
 
 	for _, i := range chunked.([][]string) {
 		var sourcePage []string
@@ -80,7 +83,7 @@ func main() {
 			page_instance := NewPage(`PageFromDriver`)
 			ctx, cancel := InitDriver()
 			go page_instance.Execute(
-				`https://data.gov.uk`+v,
+				v,
 				ctx,
 				cancel,
 				&sourcePage,
@@ -120,8 +123,11 @@ func main() {
 			detail.Title = auto.Name
 			detail.Describe = auto.Description
 			info := Info{}
-			info.Publisher = auto.Creator.Name
-			info.Updated = auto.DateModified.String()
+			if len(auto.Author) != 0 {
+				info.Publisher = auto.Author[0].Name
+			}
+			info.Created = auto.DatePublished
+			info.Identifier = auto.Identifier
 			detail.Info = info
 
 			json_res, _ := json.Marshal(&detail)

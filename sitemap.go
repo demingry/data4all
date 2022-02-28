@@ -15,15 +15,16 @@ type Sitemap struct {
 }
 
 /*
-	params[0]url, params[1]regexp(optional)
+	params[0]url, params[1]source(return), params[2]regexp(optional)
 */
 func (s *Sitemap) Execute(params ...interface{}) (interface{}, error) {
 
-	if len(params) == 1 {
+	defer s.Getter(params[1])
+	if len(params) == 2 {
 		sitemapurl := s.readSitemap(fmt.Sprintf("%v", params[0]))
 		copy(s.SitemapURL, sitemapurl)
 		return sitemapurl, nil
-	} else if len(params) == 2 {
+	} else if len(params) == 3 {
 		sitemapurl := s.readSitemap(fmt.Sprintf("%v", params[0]))
 		parsedurl := s.parseSitemap(fmt.Sprintf("%v", params[1]), sitemapurl)
 		copy(s.SitemapURL, parsedurl)
@@ -74,11 +75,15 @@ func NewSitemap() Icommand {
 	return &Sitemap{}
 }
 
-func (s *Sitemap) Getter() []interface{} {
+/*
+	[]string
+*/
+func (s *Sitemap) Getter(source interface{}) {
 
-	var data []interface{}
+	sourceConver, ok := source.(*[]string)
+	if !ok {
+		return
+	}
 
-	data = append(data, s.SitemapURL)
-
-	return data
+	copy(*sourceConver, s.SitemapURL)
 }
