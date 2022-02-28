@@ -46,10 +46,11 @@ func main() {
 	// 	)
 	// }
 
-	sourceSitemap := make([]string, 0)
+	var sourceSitemap []string
 	sitemap_instance := NewSitemap()
 	sitemap_instance.Execute(os.Getenv(`SITEMAP`), &sourceSitemap)
 
+	fmt.Println(len(sourceSitemap))
 	for {
 		if len(threads) == 0 {
 			break
