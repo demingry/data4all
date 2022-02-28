@@ -85,5 +85,7 @@ func (s *Sitemap) Getter(source interface{}) {
 		return
 	}
 
+	fmt.Println(s.SitemapURL)
+
 	copy(*sourceConver, s.SitemapURL)
 }
