@@ -46,7 +46,7 @@ func main() {
 	// 	)
 	// }
 
-	var sourceSitemap []string
+	sourceSitemap := make([]string, 0)
 	sitemap_instance := NewSitemap()
 	sitemap_instance.Execute(os.Getenv(`SITEMAP`), &sourceSitemap)
 
