@@ -87,5 +87,5 @@ func (s *Sitemap) Getter(source interface{}) {
 		return
 	}
 
-	*sourceConver = append(*sourceConver, v...)
+	*sourceConver = append(*sourceConver, s.SitemapURL...)
 }
