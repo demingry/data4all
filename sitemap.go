@@ -23,8 +23,7 @@ func (s *Sitemap) Execute(params ...interface{}) (interface{}, error) {
 	if len(params) == 2 {
 		sitemapurl := s.readSitemap(fmt.Sprintf("%v", params[0]))
 		s.SitemapURL = make([]string, len(sitemapurl))
-		len := copy(s.SitemapURL, sitemapurl)
-		fmt.Println(len)
+		copy(s.SitemapURL, sitemapurl)
 		return sitemapurl, nil
 	} else if len(params) == 3 {
 		sitemapurl := s.readSitemap(fmt.Sprintf("%v", params[0]))
@@ -88,5 +87,6 @@ func (s *Sitemap) Getter(source interface{}) {
 		return
 	}
 
-	copy(*sourceConver, s.SitemapURL)
+	len := copy(*sourceConver, s.SitemapURL)
+	fmt.Println(len)
 }
