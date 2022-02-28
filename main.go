@@ -73,6 +73,7 @@ func main() {
 	// 	)
 	// }
 
+	fmt.Println(len(sourceSitemap))
 	chunked := ChunkSlice(sourceSitemap, 4)
 	fmt.Println(len(chunked.([][]string)))
 
