@@ -74,6 +74,7 @@ func main() {
 	// }
 
 	chunked := ChunkSlice(sourceSitemap, 4)
+	fmt.Println(len(chunked.([][]string)))
 
 	for _, i := range chunked.([][]string) {
 		var sourcePage []string

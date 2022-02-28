@@ -22,7 +22,6 @@ func (s *Sitemap) Execute(params ...interface{}) (interface{}, error) {
 	defer s.Getter(params[1])
 	if len(params) == 2 {
 		sitemapurl := s.readSitemap(fmt.Sprintf("%v", params[0]))
-		fmt.Println(len(sitemapurl))
 		copy(s.SitemapURL, sitemapurl)
 		return sitemapurl, nil
 	} else if len(params) == 3 {
