@@ -35,6 +35,7 @@ func (s *Sitemap) Execute(params ...interface{}) (interface{}, error) {
 
 func (s *Sitemap) readSitemap(url string) []string {
 
+	fmt.Println("url", url)
 	resp, _ := http.Get(url)
 	defer resp.Body.Close()
 
