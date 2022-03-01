@@ -11,7 +11,6 @@ import (
 
 var (
 	threads chan struct{}
-	t       int64
 	mu      sync.Mutex
 )
 
