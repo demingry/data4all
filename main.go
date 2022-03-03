@@ -79,7 +79,6 @@ func main() {
 		var sourcePage []string
 		for _, v := range i {
 			threads <- struct{}{}
-			fmt.Println(v)
 			page_instance := NewPage(`PageFromDriver`)
 			ctx, cancel := InitDriver()
 			go page_instance.Execute(

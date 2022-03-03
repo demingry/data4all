@@ -29,7 +29,6 @@ func (p *proxy) Execute(params ...interface{}) (interface{}, error) {
 		return nil, err
 	}
 
-	fmt.Println("Via proxy")
 	return newurl, nil
 }
 
