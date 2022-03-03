@@ -34,6 +34,9 @@ func (p *proxy) Execute(params ...interface{}) (interface{}, error) {
 
 func (p *proxy) doProxy(url string, ctx *context.Context) (string, error) {
 
+	if found := strings.Contains(url, `data4all-proxy`); found {
+		return url, nil
+	}
 	proxy_list := strings.Split(os.Getenv("PROXY_LIST"), ";")
 
 	rand.Seed(time.Now().UnixNano())
