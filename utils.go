@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"math/rand"
 	"os"
 	"reflect"
 	"time"
@@ -73,4 +74,13 @@ func ChunkSlice(slice interface{}, chunkSize int) interface{} {
 		st = ed
 	}
 	return SST.Interface()
+}
+
+func ShuffleSlice(slice []string) {
+	source := rand.NewSource(time.Now().UnixNano())
+	random := rand.New(source)
+	for i := len(slice) - 1; i > 0; i-- {
+		j := random.Intn(i + 1)
+		slice[i], slice[j] = slice[j], slice[i]
+	}
 }
