@@ -20,11 +20,11 @@ type proxy struct {
 */
 func (p *proxy) Execute(params ...interface{}) (interface{}, error) {
 
-	ctx, ok := params[1].(context.Context)
+	ctx, ok := params[1].(*context.Context)
 	if !ok {
 		return nil, fmt.Errorf("Wrong context type in params")
 	}
-	newurl, err := p.doProxy(fmt.Sprintf("%v", params[0]), &ctx)
+	newurl, err := p.doProxy(fmt.Sprintf("%v", params[0]), ctx)
 	if err != nil {
 		return nil, err
 	}
