@@ -37,7 +37,7 @@ func main() {
 		ctx, cancel := InitDriver()
 		nodes_instance := NewNodes()
 		go nodes_instance.Execute(
-			`https://www.dallasopendata.com/browse?limitTo=datasets&page=`+fmt.Sprintf("%d", i),
+			`https://data.sfgov.org/browse?limitTo=datasets&page=`+fmt.Sprintf("%d", i),
 			`a[itemprop='url']`,
 			ctx,
 			cancel,
