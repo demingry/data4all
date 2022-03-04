@@ -37,7 +37,7 @@ func main() {
 		ctx, cancel := InitDriver()
 		nodes_instance := NewNodes()
 		go nodes_instance.Execute(
-			`https://www.icpsr.umich.edu/web/ICPSR/search/studies?rows=50&start=`+fmt.Sprintf("%d", i*50),
+			`https://www.openicpsr.org/openicpsr/search/studies?rows=25&start=`+fmt.Sprintf("%d", i*50),
 			`strong a`,
 			ctx,
 			cancel,
