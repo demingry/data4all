@@ -37,8 +37,8 @@ func main() {
 		ctx, cancel := InitDriver()
 		nodes_instance := NewNodes()
 		go nodes_instance.Execute(
-			`https://data.ny.gov/browse?limitTo=datasets&page=`+fmt.Sprintf("%d", i),
-			`a[itemprop='url']`,
+			`https://www.icpsr.umich.edu/web/ICPSR/search/studies?rows=50&start=`+fmt.Sprintf("%d", i)*50,
+			`strong a`,
 			ctx,
 			cancel,
 			`href`,
@@ -125,8 +125,9 @@ func main() {
 			if len(auto.Creator) != 0 {
 				info.Publisher = auto.Creator[0].Name
 			}
-			info.Created = auto.DateCreated.String()
-			info.Updated = auto.DateModified.String()
+			info.Created = auto.DateCreated
+			info.Updated = auto.DateModified
+			info.Identifier = auto.Identifier
 			detail.Info = info
 
 			if detail.URL == "" && detail.Title == "" {
