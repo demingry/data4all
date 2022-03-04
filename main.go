@@ -2,11 +2,9 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"os"
 	"strconv"
-	"strings"
 	"sync"
 )
 
@@ -26,29 +24,29 @@ func main() {
 	threads_number, _ := strconv.Atoi(os.Getenv("THREADS_NUMBER"))
 	threads = make(chan struct{}, threads_number)
 
-	params := strings.Split(os.Getenv("REQUEST_PARAMS"), "-")
-	start, _ := strconv.Atoi(params[0])
-	end, _ := strconv.Atoi(params[1])
+	// params := strings.Split(os.Getenv("REQUEST_PARAMS"), "-")
+	// start, _ := strconv.Atoi(params[0])
+	// end, _ := strconv.Atoi(params[1])
 
-	sourceNodes := make(map[string]interface{})
-	for i := start; i < end; i++ {
-		fmt.Println("Scraped Page: " + fmt.Sprintf("%d", i))
-		threads <- struct{}{}
-		ctx, cancel := InitDriver()
-		nodes_instance := NewNodes()
-		go nodes_instance.Execute(
-			`https://www.openicpsr.org/openicpsr/search/studies?rows=25&start=`+fmt.Sprintf("%d", i*50),
-			`strong a`,
-			ctx,
-			cancel,
-			`href`,
-			&sourceNodes,
-		)
-	}
+	// sourceNodes := make(map[string]interface{})
+	// for i := start; i < end; i++ {
+	// 	fmt.Println("Scraped Page: " + fmt.Sprintf("%d", i))
+	// 	threads <- struct{}{}
+	// 	ctx, cancel := InitDriver()
+	// 	nodes_instance := NewNodes()
+	// 	go nodes_instance.Execute(
+	// 		`https://www.openicpsr.org/openicpsr/search/studies?rows=25&start=`+fmt.Sprintf("%d", i*50),
+	// 		`strong a`,
+	// 		ctx,
+	// 		cancel,
+	// 		`href`,
+	// 		&sourceNodes,
+	// 	)
+	// }
 
-	// var sourceSitemap []string
-	// sitemap_instance := NewSitemap()
-	// sitemap_instance.Execute(os.Getenv(`SITEMAP`), &sourceSitemap)
+	var sourceSitemap []string
+	sitemap_instance := NewSitemap()
+	sitemap_instance.Execute(os.Getenv(`SITEMAP`), &sourceSitemap)
 
 	for {
 		if len(threads) == 0 {
@@ -73,7 +71,7 @@ func main() {
 	// 	)
 	// }
 
-	chunked := ChunkSlice(sourceNodes["NodesValue"], 4)
+	chunked := ChunkSlice(sourceSitemap, 4)
 
 	for _, i := range chunked.([][]string) {
 		var sourcePage []string
@@ -118,18 +116,15 @@ func main() {
 			json.Unmarshal([]byte(i), &auto)
 
 			detail := Detail{}
-			if len(auto.Distribution) != 0 {
-				detail.URL = auto.Distribution[0].ContentURL
-			}
+			detail.URL = auto.URL
 			detail.Title = auto.Name
 			detail.Describe = auto.Description
 			info := Info{}
 			if len(auto.Creator) != 0 {
 				info.Publisher = auto.Creator[0].Name
 			}
-			info.Created = auto.DateCreated
-			info.Updated = auto.DateModified
-			info.Identifier = auto.Identifier
+			info.Created = auto.DateCreated.String()
+			info.Updated = auto.DateModified.String()
 			detail.Info = info
 
 			if detail.URL == "" && detail.Title == "" {
