@@ -121,7 +121,6 @@ func main() {
 			if len(auto.Distribution) != 0 {
 				detail.URL = auto.Distribution[0].ContentURL
 			}
-			detail.URL = auto.URL
 			detail.Title = auto.Name
 			detail.Describe = auto.Description
 			info := Info{}
