@@ -56,7 +56,7 @@ func main() {
 		}
 	}
 
-	fmt.println("this")
+	fmt.Println("this")
 
 	chunked := ChunkSlice(sourceNodes["NodesValue"], 4)
 
