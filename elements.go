@@ -32,6 +32,7 @@ func (e *Elemtns) Execute(params ...interface{}) (interface{}, error) {
 	for k, v := range elements {
 		e.elements[k] = v
 	}
+	e.elements[`URL`] = fmt.Sprintf("%v", params[0])
 	return elements, nil
 }
 
