@@ -70,6 +70,7 @@ func main() {
 		selectors[`publisher`] = `[itemprop='url'] span`
 		for _, i := range v {
 			threads <- struct{}{}
+			fmt.Println(v)
 			elements_instance := NewElements()
 			ctx, cancel := InitDriver()
 			go elements_instance.Execute(
