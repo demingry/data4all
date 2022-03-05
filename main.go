@@ -64,9 +64,9 @@ func main() {
 		selectors := make(map[string]string)
 		selectors[`URL`] = `//a[@class='landing-page']`
 		selectors[`title`] = `//h1[@itemprop='name']`
-		selectors[`description`] = `.no-print p`
-		selectors[`created`] = `span[itemprop='dateCreated']`
-		selectors[`updated`] = `span[itemprop='dateModified']`
+		selectors[`description`] = `//div[@class='no-print']//div[@class='markdown']`
+		selectors[`created`] = `//span[@class='created-date hidden-sm']`
+		selectors[`updated`] = `//span[@class='updated-date hidden-sm']`
 		selectors[`publisher`] = `[itemprop='url'] span`
 		for _, i := range v {
 			threads <- struct{}{}
