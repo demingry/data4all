@@ -64,7 +64,7 @@ func main() {
 
 		var sourceElements []interface{}
 		selectors := make(map[string]string)
-		selectors[`URL`] = `//a[@class='landing-page']`
+		selectors[`URL`] = `.au-breadcrumbs li:nth-of-type(3) a`
 		selectors[`title`] = `//h1[@itemprop='name']`
 		selectors[`description`] = `.no-print div.markdown`
 		selectors[`created`] = `//span[@class='created-date hidden-sm']`
