@@ -37,7 +37,7 @@ func main() {
 		ctx, cancel := InitDriver()
 		nodes_instance := NewNodes()
 		go nodes_instance.Execute(
-			`https://data.gov.au/search?organisation=Geoscience%20Australia&page=`+fmt.Sprintf("%d", i),
+			`https://data.gov.au/search?organisation=Commonwealth%20of%20Australia%20%28Geoscience%20Australia%29&page=`+fmt.Sprintf("%d", i),
 			`.dataset-summary-title a`,
 			ctx,
 			cancel,
