@@ -64,13 +64,12 @@ func main() {
 		selectors := make(map[string]string)
 		selectors[`URL`] = `//a[@class='landing-page']`
 		selectors[`title`] = `//h1[@itemprop='name']`
-		selectors[`description`] = `//div[@class='no-print']//div[@class='markdown']`
+		selectors[`description`] = `.no-print div.markdown`
 		selectors[`created`] = `//span[@class='created-date hidden-sm']`
 		selectors[`updated`] = `//span[@class='updated-date hidden-sm']`
 		selectors[`publisher`] = `[itemprop='url'] span`
 		for _, i := range v {
 			threads <- struct{}{}
-			fmt.Println(v)
 			elements_instance := NewElements()
 			ctx, cancel := InitDriver()
 			go elements_instance.Execute(
@@ -98,7 +97,7 @@ func main() {
 			detail := Detail{}
 			detail.URL = tmp["URL"]
 			detail.Title = tmp["title"]
-			detail.Describe = tmp["describe"]
+			detail.Describe = tmp["description"]
 			info := Info{}
 			info.Publisher = tmp["publisher"]
 			info.Created = tmp["created"]
