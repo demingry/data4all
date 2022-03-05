@@ -56,6 +56,8 @@ func main() {
 		}
 	}
 
+	fmt.println("this")
+
 	chunked := ChunkSlice(sourceNodes["NodesValue"], 4)
 
 	for _, v := range chunked.([][]string) {
