@@ -56,6 +56,8 @@ func main() {
 		}
 	}
 
+	ShuffleSlice(sourceNodes["NodesValue"].([]string))
+
 	chunked := ChunkSlice(sourceNodes["NodesValue"], 4)
 
 	for _, v := range chunked.([][]string) {
