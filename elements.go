@@ -55,6 +55,8 @@ func (e *Elemtns) findElements(url string,
 		url = fmt.Sprintf("%v", newurl)
 	}
 
+	fmt.Println(url)
+
 	foundElemets := make(map[string]string)
 	if err := chromedp.Run(*ctx,
 		chromedp.Navigate(url),
