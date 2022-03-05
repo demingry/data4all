@@ -56,16 +56,14 @@ func main() {
 		}
 	}
 
-	fmt.Println(sourceNodes["NodesValue"])
-
 	chunked := ChunkSlice(sourceNodes["NodesValue"], 4)
 
 	for _, v := range chunked.([][]string) {
 
 		var sourceElements []interface{}
 		selectors := make(map[string]string)
-		selectors[`URL`] = `.au-breadcrumbs li:nth-of-type(3) a`
-		selectors[`title`] = `h1`
+		selectors[`URL`] = `//a[@class='landing-page']`
+		selectors[`title`] = `//h1[@itemprop='name']`
 		selectors[`description`] = `.no-print p`
 		selectors[`created`] = `span[itemprop='dateCreated']`
 		selectors[`updated`] = `span[itemprop='dateModified']`
