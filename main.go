@@ -111,9 +111,9 @@ func main() {
 			info.Updated = tmp[`updated`]
 			detail.Info = info
 
-			if detail.URL == "" && detail.Title == "" {
-				continue
-			}
+			// if detail.URL == "" && detail.Title == "" {
+			// 	continue
+			// }
 
 			json_res, _ := json.Marshal(&detail)
 
