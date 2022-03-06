@@ -33,7 +33,6 @@ func main() {
 	for i := start; i < end; i++ {
 		for q := 1; q < 40; q++ {
 
-			fmt.Println("Scraped Page: " + fmt.Sprintf("%d", q) + " year: " + fmt.Sprintf("%d", i))
 			threads <- struct{}{}
 			ctx, cancel := InitDriver()
 			nodes_instance := NewNodes()
