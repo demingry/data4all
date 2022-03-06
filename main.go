@@ -96,6 +96,12 @@ func main() {
 			)
 		}
 
+		for {
+			if len(threads) == 0 {
+				break
+			}
+		}
+
 		for _, i := range sourceElements {
 
 			tmp, ok := i.(map[string]string)
@@ -111,9 +117,9 @@ func main() {
 			info.Updated = tmp[`updated`]
 			detail.Info = info
 
-			// if detail.URL == "" && detail.Title == "" {
-			// 	continue
-			// }
+			if detail.URL == "" && detail.Title == "" {
+				continue
+			}
 
 			json_res, _ := json.Marshal(&detail)
 
