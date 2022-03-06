@@ -47,7 +47,7 @@ func InitDriver() (*context.Context, context.CancelFunc) {
 	)
 
 	ctx, cancel := chromedp.NewContext(allocatorCtx)
-	ctx, cancel = context.WithTimeout(ctx, 40*time.Second)
+	ctx, cancel = context.WithTimeout(ctx, 25*time.Second)
 
 	return &ctx, cancel
 }
