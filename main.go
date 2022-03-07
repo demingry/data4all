@@ -13,8 +13,10 @@ import (
 var (
 	threads chan struct{}
 	mu      sync.Mutex
-	retries int = 0
+	retries uint64 = 0
 )
+
+const max_retries uint64 = 5
 
 func main() {
 
@@ -39,7 +41,7 @@ func main() {
 
 				for page := 1; page < 41; page++ {
 
-					if retries > 5 {
+					if retries > max_retries {
 						retries = 0
 						break
 					}
@@ -65,6 +67,7 @@ func main() {
 
 	for {
 		if len(threads) == 0 {
+			retries = 0
 			break
 		}
 	}
@@ -88,6 +91,7 @@ func main() {
 
 		for {
 			if len(threads) == 0 {
+				retries = 0
 				break
 			}
 		}
@@ -105,6 +109,7 @@ func main() {
 
 		for {
 			if len(threads) == 0 {
+				retries = 0
 				break
 			}
 		}
@@ -138,6 +143,7 @@ func main() {
 
 	for {
 		if len(threads) == 0 {
+			retries = 0
 			break
 		}
 	}

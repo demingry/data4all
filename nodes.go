@@ -35,6 +35,11 @@ func (n *Nodes) Execute(params ...interface{}) (interface{}, error) {
 
 		nodes := n.findNodes(fmt.Sprintf("%v", params[0]), fmt.Sprintf("%v", params[1]), ctx, cancel)
 		if nodes == nil {
+
+			//设置重试次数
+			mu.Lock()
+			retries++
+			mu.Unlock()
 			return nil, fmt.Errorf("Error in FindNodes")
 		}
 
@@ -45,6 +50,11 @@ func (n *Nodes) Execute(params ...interface{}) (interface{}, error) {
 
 		nodes := n.findNodes(fmt.Sprintf("%v", params[0]), fmt.Sprintf("%v", params[1]), ctx, cancel)
 		if nodes == nil {
+
+			//设置重试次数
+			mu.Lock()
+			retries++
+			mu.Unlock()
 			return nil, fmt.Errorf("Error in FindNodes")
 		}
 
@@ -92,9 +102,6 @@ func (n *Nodes) findNodes(url string,
 		chromedp.Nodes(selector, &nodes),
 	); err != nil {
 		fmt.Printf("[!]Err gethref in: %s\n", err.Error())
-		mu.Lock()
-		retries++
-		mu.Unlock()
 		return nil
 	}
 

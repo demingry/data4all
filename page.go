@@ -37,7 +37,16 @@ func (pd *PageFromDriver) Execute(params ...interface{}) (interface{}, error) {
 		return nil, fmt.Errorf("Wrong type in params")
 	}
 
-	pd.pagesource = pd.sourceFromDriver(fmt.Sprintf("%v", params[0]), ctx, cancel)
+	tmp, err := pd.sourceFromDriver(fmt.Sprintf("%v", params[0]), ctx, cancel)
+	if err != nil {
+
+		//设置重试次数
+		mu.Lock()
+		retries++
+		mu.Unlock()
+		return nil, err
+	}
+	pd.pagesource = tmp
 	return nil, nil
 }
 
@@ -79,7 +88,7 @@ func (pr *PageFromRaw) sourceFromRaw(url string) string {
 func (pd *PageFromDriver) sourceFromDriver(url string,
 	ctx *context.Context,
 	cancel context.CancelFunc,
-) string {
+) (string, error) {
 
 	defer cancel()
 
@@ -88,7 +97,7 @@ func (pd *PageFromDriver) sourceFromDriver(url string,
 		newurl, err := sproxy.Execute(url, ctx)
 		if err != nil {
 			fmt.Println(err)
-			return ""
+			return "", err
 		}
 
 		url = fmt.Sprintf("%v", newurl)
@@ -105,10 +114,10 @@ func (pd *PageFromDriver) sourceFromDriver(url string,
 
 	if err != nil {
 		fmt.Println("Error in get page source: ", err)
-		return ""
+		return "", err
 	}
 
-	return res
+	return res, nil
 
 }
 
