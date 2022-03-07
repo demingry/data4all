@@ -7,6 +7,7 @@ import (
 	"reflect"
 	"time"
 
+	"github.com/Unknwon/goconfig"
 	"github.com/chromedp/chromedp"
 )
 
@@ -83,4 +84,14 @@ func ShuffleSlice(slice []string) {
 		j := random.Intn(i + 1)
 		slice[i], slice[j] = slice[j], slice[i]
 	}
+}
+
+func GetConfig(key string) ([]byte, error) {
+	cfg, err := goconfig.LoadConfigFile(`./config`)
+	if err != nil {
+		return nil, err
+	}
+
+	value := cfg.MustValue(`default`, key)
+	return []byte(value), nil
 }

@@ -1,3 +1,5 @@
+github.com/Unknwon/goconfig v1.0.0 h1:9IAu/BYbSLQi8puFjUQApZTxIHqSwrj5d8vpP8vTq4A=
+github.com/Unknwon/goconfig v1.0.0/go.mod h1:wngxua9XCNjvHjDiTiV26DaKDT+0c63QR6H5hjVUUxw=
 github.com/anaskhan96/soup v1.2.5 h1:V/FHiusdTrPrdF4iA1YkVxsOpdNcgvqT1hG+YtcZ5hM=
 github.com/anaskhan96/soup v1.2.5/go.mod h1:6YnEp9A2yywlYdM4EgDz9NEHclocMepEtku7wg6Cq3s=
 github.com/chromedp/cdproto v0.0.0-20220217222649-d8c14a5c6edf h1:1omDWNUsWxn2HpiMiMuyRmzjl9uG7RP3IE6GTlpgJWU=
