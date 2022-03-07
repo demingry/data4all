@@ -92,6 +92,9 @@ func (n *Nodes) findNodes(url string,
 		chromedp.Nodes(selector, &nodes),
 	); err != nil {
 		fmt.Printf("[!]Err gethref in: %s\n", err.Error())
+		mu.Lock()
+		retries++
+		mu.Unlock()
 		return nil
 	}
 

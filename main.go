@@ -13,6 +13,7 @@ import (
 var (
 	threads chan struct{}
 	mu      sync.Mutex
+	retries int = 0
 )
 
 func main() {
@@ -37,6 +38,11 @@ func main() {
 			for _, dtype := range document_type {
 
 				for page := 1; page < 41; page++ {
+
+					if retries > 5 {
+						retries = 0
+						break
+					}
 
 					threads <- struct{}{}
 					ctx, cancel := InitDriver()
