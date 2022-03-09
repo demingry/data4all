@@ -2,11 +2,9 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"os"
 	"strconv"
-	"strings"
 	"sync"
 )
 
@@ -29,51 +27,55 @@ func main() {
 	threads_number, _ := strconv.Atoi(os.Getenv("THREADS_NUMBER"))
 	threads = make(chan struct{}, threads_number)
 
-	params := strings.Split(os.Getenv("REQUEST_PARAMS"), ";")
+	// params := strings.Split(os.Getenv("REQUEST_PARAMS"), "-")
+	// start, _ := strconv.Atoi(params[0])
+	// end, _ := strconv.Atoi(params[1])
 
-	sourceNodes := make(map[string]interface{})
-	document_type := []string{`dataset`, `text`}
-	for _, repo := range params {
+	// sourceNodes := make(map[string]interface{})
+	// for i := start; i < end; i++ {
+	// 	fmt.Println("Scraped Page: " + fmt.Sprintf("%d", i))
+	// 	threads <- struct{}{}
+	// 	ctx, cancel := InitDriver()
+	// 	nodes_instance := NewNodes()
+	// 	go nodes_instance.Execute(
+	// 		`https://data.ny.gov/browse?limitTo=datasets&page=`+fmt.Sprintf("%d", i),
+	// 		`a[itemprop='url']`,
+	// 		ctx,
+	// 		cancel,
+	// 		`href`,
+	// 		&sourceNodes,
+	// 	)
+	// }
 
-		for year := 2010; year < 2022; year++ {
-
-			for _, dtype := range document_type {
-
-				for page := 1; page < 41; page++ {
-
-					if retries > max_retries {
-						retries = 0
-						break
-					}
-
-					threads <- struct{}{}
-					ctx, cancel := InitDriver()
-					nodes_instance := NewNodes()
-					go nodes_instance.Execute(
-						repo+`?resource-type-id=`+dtype+`&registered=`+fmt.Sprintf("%d", year)+`&page=`+fmt.Sprintf("%d", page),
-						`a#title-link`,
-						ctx,
-						cancel,
-						`href`,
-						&sourceNodes,
-					)
-				}
-
-			}
-
-		}
-
-	}
+	var sourceSitemap []string
+	sitemap_instance := NewSitemap()
+	sitemap_instance.Execute(os.Getenv(`SITEMAP`), &sourceSitemap)
 
 	for {
 		if len(threads) == 0 {
-			retries = 0
 			break
 		}
 	}
 
-	ShuffleSlice(sourceNodes[`NodesValue`].([]string))
-	chunked := ChunkSlice(sourceNodes[`NodesValue`], 4)
+	// var sourceElements []interface{}
+	// selectors := make(map[string]string)
+	// selectors[`title`] = `span#title`
+	// selectors[`description`] = `#dsDescription div`
+	// for _, i := range sourceNodes["NodesValue"].([]string) {
+	// 	threads <- struct{}{}
+	// 	elements_instance := NewElements()
+	// 	ctx, cancel := InitDriver()
+	// 	go elements_instance.Execute(
+	// 		`https://dataverse.harvard.edu`+i,
+	// 		selectors,
+	// 		ctx,
+	// 		cancel,
+	// 		&sourceElements,
+	// 	)
+	// }
+
+	ShuffleSlice(sourceSitemap)
+	chunked := ChunkSlice(sourceSitemap, 4)
 
 	for _, i := range chunked.([][]string) {
 		var sourcePage []string
@@ -82,7 +84,7 @@ func main() {
 			page_instance := NewPage(`PageFromDriver`)
 			ctx, cancel := InitDriver()
 			go page_instance.Execute(
-				`https://search.datacite.org`+v,
+				v,
 				ctx,
 				cancel,
 				&sourcePage,
@@ -91,7 +93,6 @@ func main() {
 
 		for {
 			if len(threads) == 0 {
-				retries = 0
 				break
 			}
 		}
@@ -109,7 +110,6 @@ func main() {
 
 		for {
 			if len(threads) == 0 {
-				retries = 0
 				break
 			}
 		}
@@ -124,10 +124,8 @@ func main() {
 			detail.Title = auto.Name
 			detail.Describe = auto.Description
 			info := Info{}
-			info.Publisher = auto.Publisher.Name
 			info.Created = auto.DatePublished
-			info.Identifier = auto.ID
-			info.Language = auto.InLanguage
+			info.Identifier = auto.Identifier
 			detail.Info = info
 
 			if detail.URL == "" && detail.Title == "" {
@@ -143,7 +141,6 @@ func main() {
 
 	for {
 		if len(threads) == 0 {
-			retries = 0
 			break
 		}
 	}
